@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+actor Mahasiswa
+actor Dosen
+actor "Admin Akademik" as Admin
+actor "Sistem PMB" as PMB
+
+rectangle "Sistem Akademik Mini" {
+  usecase "Daftar PMB" as UC1
+  usecase "Verifikasi Pendaftaran" as UC2
+  usecase "Generate NIM" as UC3
+  usecase "Isi dan Submit KRS" as UC4
+  usecase "Validasi Prasyarat" as UC5
+  usecase "Cek Batas SKS" as UC6
+  usecase "Cek Bentrok Jadwal" as UC7
+  usecase "Approve / Revisi KRS" as UC8
+  usecase "Lihat Jadwal" as UC9
+  usecase "Input Nilai" as UC10
+  usecase "Generate Transkrip" as UC11
+  usecase "Kelola Jadwal dan Ruangan" as UC12
+}
+
+Mahasiswa --> UC1
+PMB --> UC1
+Admin --> UC2
+UC2 .> UC3 : <<include>>
+Mahasiswa --> UC4
+UC4 .> UC5 : <<include>>
+UC4 .> UC6 : <<include>>
+UC4 .> UC7 : <<include>>
+Dosen --> UC8
+Mahasiswa --> UC9
+Dosen --> UC10
+Mahasiswa --> UC11
+Admin --> UC12
+@enduml
+

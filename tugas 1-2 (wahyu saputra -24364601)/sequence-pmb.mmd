@@ -1,0 +1,26 @@
+sequenceDiagram
+    actor C as Calon Mahasiswa
+    participant API as PMB API
+    participant V as Validator
+    participant DB as Database
+    participant A as Admin Akademik
+
+    C->>API: POST /register (data pendaftaran)
+    API->>V: validasi email, nomor telepon, data wajib
+    alt data tidak valid atau email sudah dipakai
+        V-->>API: error validasi
+        API-->>C: 400/409 + pesan kesalahan
+    else data valid
+        V-->>API: valid
+        API->>DB: simpan calon mahasiswa (pending)
+        DB-->>API: nomor pendaftaran
+        API-->>C: 201 + status pending
+    end
+
+    A->>API: approve pendaftaran
+    API->>DB: cek status dan program studi
+    API->>DB: generate NIM unik
+    DB-->>API: NIM
+    API->>DB: update status approved
+    API-->>A: pendaftaran disetujui + NIM
+

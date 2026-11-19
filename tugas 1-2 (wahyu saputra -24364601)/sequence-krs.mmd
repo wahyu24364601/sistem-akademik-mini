@@ -1,0 +1,32 @@
+sequenceDiagram
+    actor M as Mahasiswa
+    participant K as KRS Manager
+    participant P as Prerequisite Validator
+    participant S as SKS Validator
+    participant J as Schedule Validator
+    participant DB as Database
+    participant D as Dosen PA
+
+    M->>K: submitKRS(daftar mata kuliah)
+    K->>P: cek prasyarat
+    P->>DB: ambil riwayat nilai
+    DB-->>P: data nilai
+    P-->>K: hasil prasyarat
+    alt prasyarat gagal
+        K-->>M: ditolak: prasyarat belum terpenuhi
+    else prasyarat lulus
+        K->>S: cek total SKS <= 24
+        S-->>K: hasil batas SKS
+        K->>J: cek bentrok jadwal
+        J->>DB: ambil jadwal mata kuliah
+        DB-->>J: data jadwal
+        J-->>K: hasil bentrok
+        alt ada pelanggaran
+            K-->>M: ditolak + alasan validasi
+        else seluruh validasi lulus
+            K->>DB: simpan status SUBMITTED
+            K-->>M: KRS menunggu persetujuan
+            K-->>D: notifikasi permohonan KRS
+        end
+    end
+

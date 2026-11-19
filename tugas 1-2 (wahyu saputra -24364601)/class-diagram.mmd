@@ -1,0 +1,113 @@
+classDiagram
+direction LR
+
+class User {
+  <<abstract>>
+  -UUID id
+  -String nama
+  -String email
+  -String passwordHash
+  +login()
+  +logout()
+  +updateProfil()
+}
+
+class Mahasiswa {
+  -String nim
+  -String angkatan
+  -String statusAkademik
+  +ajukanKRS()
+  +lihatNilai()
+  +lihatJadwal()
+}
+
+class Dosen {
+  -String nidn
+  -String bidangKeahlian
+  +approveKRS()
+  +inputNilai()
+}
+
+class AdminAkademik {
+  +kelolaMataKuliah()
+  +kelolaJadwal()
+  +verifikasiPMB()
+}
+
+class CalonMahasiswa {
+  -String nomorPendaftaran
+  -String statusPendaftaran
+  +daftar()
+  +unggahDokumen()
+}
+
+class ProgramStudi {
+  -String kode
+  -String nama
+  -String fakultas
+}
+
+class MataKuliah {
+  -String kodeMK
+  -String nama
+  -int sks
+  +tambahPrasyarat()
+}
+
+class KRS {
+  -String idKRS
+  -String semester
+  -KRSStatus status
+  +tambahMataKuliah()
+  +validasi()
+  +submit()
+}
+
+class KRSDetail {
+  -String id
+  -String status
+}
+
+class Jadwal {
+  -String idJadwal
+  -String hari
+  -Time jamMulai
+  -Time jamSelesai
+  +cekBentrok()
+}
+
+class Ruangan {
+  -String kodeRuang
+  -int kapasitas
+}
+
+class Nilai {
+  -String huruf
+  -float bobot
+  +konversiBobot()
+}
+
+class Pembayaran {
+  -String idPembayaran
+  -Decimal jumlah
+  -PaymentStatus status
+  +prosesPembayaran()
+}
+
+User <|-- Mahasiswa
+User <|-- Dosen
+User <|-- AdminAkademik
+User <|-- CalonMahasiswa
+ProgramStudi "1" o-- "0..*" Mahasiswa : menaungi
+ProgramStudi "1" o-- "0..*" MataKuliah : menawarkan
+Mahasiswa "1" *-- "0..*" KRS : memiliki
+KRS "1" *-- "1..*" KRSDetail : terdiri dari
+KRSDetail "*" --> "1" MataKuliah : memilih
+MataKuliah "1" --> "0..*" Jadwal : memiliki
+Jadwal "*" --> "1" Ruangan : memakai
+Dosen "1" --> "0..*" Jadwal : mengajar
+Mahasiswa "1" --> "0..*" Nilai : menerima
+Nilai "*" --> "1" MataKuliah : untuk
+Mahasiswa "1" --> "0..*" Pembayaran : melakukan
+MataKuliah "0..*" --> "0..*" MataKuliah : prasyarat
+

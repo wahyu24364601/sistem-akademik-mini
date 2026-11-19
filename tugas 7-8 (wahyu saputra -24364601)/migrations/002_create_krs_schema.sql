@@ -1,0 +1,7 @@
+-- Migration UP: Modul KRS
+CREATE TABLE matakuliah (id INTEGER PRIMARY KEY AUTOINCREMENT, kode_mk VARCHAR(12) UNIQUE NOT NULL, nama_mk VARCHAR(120) NOT NULL, sks INTEGER NOT NULL);
+CREATE TABLE jadwal_kuliah (id INTEGER PRIMARY KEY AUTOINCREMENT, mata_kuliah_id INTEGER NOT NULL REFERENCES matakuliah(id), hari VARCHAR(12) NOT NULL, jam_mulai TIME NOT NULL, jam_selesai TIME NOT NULL);
+CREATE TABLE prerequisite (id INTEGER PRIMARY KEY AUTOINCREMENT, mata_kuliah_id INTEGER NOT NULL REFERENCES matakuliah(id), prerequisite_id INTEGER NOT NULL REFERENCES matakuliah(id), CONSTRAINT uq_prerequisite UNIQUE(mata_kuliah_id, prerequisite_id));
+CREATE TABLE academic_record (id INTEGER PRIMARY KEY AUTOINCREMENT, nim VARCHAR(20) NOT NULL, mata_kuliah_id INTEGER NOT NULL REFERENCES matakuliah(id), nilai_huruf VARCHAR(2) NOT NULL, semester VARCHAR(12) NOT NULL, CONSTRAINT uq_record UNIQUE(nim, mata_kuliah_id, semester));
+CREATE TABLE krs (id INTEGER PRIMARY KEY AUTOINCREMENT, nim VARCHAR(20) NOT NULL, semester VARCHAR(12) NOT NULL, status VARCHAR(12) NOT NULL DEFAULT 'DRAFT', dosen_pa_id VARCHAR(30), created_at DATETIME NOT NULL, CONSTRAINT uq_krs_per_semester UNIQUE(nim, semester));
+CREATE TABLE krs_detail (id INTEGER PRIMARY KEY AUTOINCREMENT, krs_id INTEGER NOT NULL REFERENCES krs(id), mata_kuliah_id INTEGER NOT NULL REFERENCES matakuliah(id), CONSTRAINT uq_krs_course UNIQUE(krs_id, mata_kuliah_id));

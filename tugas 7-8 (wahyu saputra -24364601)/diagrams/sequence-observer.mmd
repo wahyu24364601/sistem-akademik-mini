@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant Admin as Admin Akademik
+    participant Service as Scheduling Service
+    participant Subject as ScheduleSubject
+    participant Student as StudentObserver
+    participant Lecturer as LecturerObserver
+    participant KRS as KRS Service
+    Admin->>Service: update jadwal
+    Service->>Service: cek konflik dan kapasitas
+    Service->>KRS: invalidate KRS terdampak
+    Service->>Subject: notify(SCHEDULE_CHANGED)
+    Subject->>Student: update(event)
+    Subject->>Lecturer: update(event)
+    Subject-->>Admin: status perubahan jadwal
